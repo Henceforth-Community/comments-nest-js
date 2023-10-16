@@ -8,17 +8,17 @@ export class Replies {
     @Prop()
     msg: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Comments' })
-    comment_id: Comments;
+    @Prop({ type: mongoose.Schema.Types.String, ref: 'Comments' })
+    commentId: Comments;
 
     @Prop()
-    user_id: string;
+    userId: string;
 
     @Prop()
     timestamp: true;
 
-    @Prop()
-    isDeleted: string;
+    @Prop({default: false})
+    isDeleted: boolean;
 }
 
 export const RepliesSchema = SchemaFactory.createForClass(Replies)

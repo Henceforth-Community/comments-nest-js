@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReplyDto } from './dto/create-reply.dto';
 import { UpdateReplyDto } from './dto/update-reply.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Replies } from './schema/reply.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ReplyService {
+  constructor(
+    @InjectModel(Replies.name) private replyModel: Model<Replies>
+  ){}
   create(createReplyDto: CreateReplyDto) {
-    return 'This action adds a new reply';
+    return new this.replyModel(createReplyDto).save();
   }
 
   findAll() {
-    return `This action returns all reply`;
+    let projection = {isDeleted:false}
+    return this.replyModel.find(projection).populate('commentId').exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} reply`;
+  findOne(id: string) {
+    let query = {_id:id}
+    return this.replyModel.findOne(query).exec();
   }
 
-  update(id: number, updateReplyDto: UpdateReplyDto) {
-    return `This action updates a #${id} reply`;
+  update(id: string, updateReplyDto: UpdateReplyDto) {
+    return this.replyModel.findByIdAndUpdate({_id:id},updateReplyDto,{new:true});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} reply`;
+  async remove(id: string) {
+    let selectedReply = await this.findOne(id)
+    if(selectedReply?.isDeleted == false){
+    return this.replyModel.findByIdAndUpdate({_id:id},{isDeleted:true},{new:true});
+    }
   }
 }

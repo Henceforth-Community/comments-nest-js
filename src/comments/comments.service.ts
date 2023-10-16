@@ -22,8 +22,9 @@ export class CommentsService {
   }
 
   findOne(id: string) {
+    let projection = {isDeleted:false}
     let query = {_id:id}
-    return this.commmentModel.findOne(query).exec();
+    return this.commmentModel.findOne(query,projection).exec();
   }
 
   update(id: string, updateCommentDto: UpdateCommentDto) {

@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ReplyService } from './reply.service';
 import { CreateReplyDto } from './dto/create-reply.dto';
 import { UpdateReplyDto } from './dto/update-reply.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Replies')
 @Controller('reply')
 export class ReplyController {
   constructor(private readonly replyService: ReplyService) {}
@@ -19,16 +21,16 @@ export class ReplyController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.replyService.findOne(+id);
+    return this.replyService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReplyDto: UpdateReplyDto) {
-    return this.replyService.update(+id, updateReplyDto);
+    return this.replyService.update(id, updateReplyDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.replyService.remove(+id);
+    return this.replyService.remove(id);
   }
 }
